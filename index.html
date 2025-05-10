@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Philippine Opera and Musical Plays</title>
+    <style>
+        :root {
+            --primary: #6a11cb;
+            --secondary: #2575fc;
+            --accent: #ff9966;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --info: #17a2b8;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+        
+        body, html {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: var(--light);
+            overflow-x: hidden;
+        }
+        
+        .presentation {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+        
+        .slide {
+            display: none;
+            width: 100%;
+            height: 100vh;
+            padding: 2rem;
+            box-sizing: border-box;
+            background: rgba(0, 0, 0, 0.8);
+            overflow-y: auto;
+            position: relative;
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        .slide-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        h1, h2, h3 {
+            color: var(--accent);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            margin-top: 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        h3 {
+            font-size: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+        
+        .two-column {
+            display: flex;
+            gap: 2rem;
+            margin: 1rem 0;
+        }
+        
+        .two-column > div {
+            flex: 1;
+        }
+        
+        .image-container {
+            text-align: center;
+            margin: 1rem 0;
+        }
+        
+        .image-container img {
+            max-width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .music-note {
+            position: absolute;
+            opacity: 0.2;
+            font-size: 3rem;
+            z-index: -1;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .navigation {
+            position: fixed;
+            bottom: 20px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 100;
+        }
+        
+        .nav-button {
+            background: var(--accent);
+            color: var(--dark);
+            border: none;
+            padding: 10px 20px;
+            margin: 0 10px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+        }
+        
+        .nav-button:hover {
+            background: var(--light);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        .title-slide {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .title-content {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .title-slide h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .title-slide h2 {
+            font-size: 2rem;
+            border: none;
+            color: var(--light);
+            opacity: 0.9;
+        }
+        
+        .quotes {
+            font-style: italic;
+            border-left: 4px solid var(--accent);
+            padding-left: 1rem;
+            margin: 1rem 0;
+        }
+        
+        .musical-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .musical-list li {
+            background: rgba(255, 255, 255, 0.1);
+            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 10px;
+            border-left: 4px solid var(--accent);
+            transition: transform 0.3s ease;
+        }
+        
+        .musical-list li:hover {
+            transform: translateX(10px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .indicator {
+            position: fixed;
+            bottom: 70px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 99;
+        }
+        
+        .dot {
+            height: 10px;
+            width: 10px;
+            background-color: var(--light);
+            opacity: 0.5;
+            border-radius: 50%;
+            display: inline-block;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+        
+        .dot.active {
+            opacity: 1;
+            background-color: var(--accent);
+            transform: scale(1.3);
+        }
+        
+        /* Music note decorations */
+        .music-decoration {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .two-column {
+                flex-direction: column;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .title-slide h1 {
+                font-size: 2.5rem;
+            }
+            
+            .title-slide h2 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="music-decoration" id="musicNotes"></div>
+    
+    <div class="presentation">
+        <!-- Title Slide -->
+        <div class="slide title-slide active" id="slide1">
+            <div class="title-content">
+                <h1>Philippine Opera and Musical Plays</h1>
+                <h2>A Journey Through Philippine Musical Theater</h2>
+            </div>
+        </div>
+        
+        <!-- Introduction to Philippine Opera -->
+        <div class="slide" id="slide2">
+            <div class="slide-content">
+                <h1>Philippine Opera</h1>
+                <p>The emergence of the Filipino opera started to take shape during the middle part of the 19th century. Foreign performers, including instrumental virtuosi, as well as opera singers and Spanish zarzuela performers came to the country to perform for enthusiastic audiences.</p>
+                <p>The opera is an art and music form in which singers and musicians perform a dramatic work combining text (called a libretto) and a musical score, usually in an elaborate theatrical setting. It incorporates many of the elements of spoken theater, such as acting, scenery, costumes, and sometimes includes dance.</p>
+                <p>The performance is typically given in an opera house, cultural center, theater, or auditorium. It is accompanied by an orchestra or smaller musical ensemble. The dialogue is entirely sung and not spoken.</p>
+                <p>Opera is part of the Western classical music form and tradition. It started in Italy in the 16th century and soon spread through the rest of Europe. While English, French, Italian operas were being presented, it was the Italian opera that captured the creative imagination of composers, librettists and singers alike.</p>
+            </div>
+        </div>
+        
+        <!-- Local Theaters and Early Philippines Operas -->
+        <div class="slide" id="slide3">
+            <div class="slide-content">
+                <h1>Local Theaters and Early Philippine Operas</h1>
+                <p>Local theaters, including the Zorilla, Principe Alfonso, Variedades, Quiapo and Tondo Theaters, were the choice venues for the mainly Italian operas that came to the country, such as Lucia di Lammermoor, La Boheme, La Traviata, and Aida. Later, other opera venues were established, led by the Manila Grand Opera House and the Metropolitan Theater (Met).</p>
+                <p>Sandugong Panaginip is the first Filipino opera by Pedro Paterno, a poet, novelist, musician, and government official. This was first presented at the Zorilla Theater on August 2, 1902.</p>
+                <p>The Orchestra Molina was known for their interpretation of operatic works as well as other classical Compositions.</p>
+                <p>The establishment of the Cultural Center of the Philippines (CCP) by then First Lady Imelda Romualdez-Marcos in 1969 paved the way for other Filipino operas to be staged at a legitimate venue of international standard.</p>
+            </div>
+        </div>
+        
+        <!-- Rizal-Based Operas -->
+        <div class="slide" id="slide4">
+            <div class="slide-content">
+                <h1>Rizal-Based Operas</h1>
+                <h2>NOLI ME TANGERE and EL FILIBUSTERISMO</h2>
+                <p>Felipe Padilla de Leon- a National artist who composed the Operas based on Rizal's two novels Noli Me Tangere and El Filibusterismo. These were presented at the CCP Main Theater in 1970 and 1975, respectively.</p>
+                <p>Noli Me Tangere and El Filibusterismo were later restaged also at CCP as musical plays with new music composed by Ryan Cayabyab and new creative team.</p>
+                <h3>NOLI ME TANGERE, THE OPERA</h3>
+                <p>The three-act opera Noli Me Tangere was composed by National Artist Felipe Padilla de Leon, with libretto by National Artist Guillermo Tolentino. It premiered in 1957 at the FEU Auditorium. The cast included Juanita Javier Torres as Maria Clara, Don David as Ibarra, Fides Cuyugan Asensio as Sisa, Milo Cristobal as Padre (Father/priest) Damaso, and Morli Daram as the director.</p>
+            </div>
+        </div>
+        
+        <!-- La Loba Negra -->
+        <div class="slide" id="slide5">
+            <div class="slide-content">
+                <h1>La Loba Negra</h1>
+                <p>La Loba Negra (The Black She-Wolf) is a three-act Filipino opera. Acts I and II are based on history. Act III is based on a legend attributed to Fr. Jose Burgos. He was one of the three martyred priests, Gomez, Burgos, and Zamora who were executed in Bagumbayan (now Luneta) in 1872. The music was composed by National Artist Francisco Feliciano, with libretto by soprano Fides Cuyugan Asensio.</p>
+                <h3>Background of the Opera</h3>
+                <p>The story of La Loba Negra takes place during the 17th century of Spanish rule in the Philippines. It revolves around the tragic assassination of Spanish Governor-General Bustamante. His administration was greatly admired for his planned reforms in the colonial administration. It also focused on the bitter reaction and planned vendetta (revenge) by his wife Doña Luisa (La Loba Negra) on the religious perpetrators. As massive corruption and friar abuse were prevalent, the entry of Governor-General Bustamante to institute reforms did not sit well with the powerfully abusive priests, which led to his untimely death.</p>
+            </div>
+        </div>
+        
+        <!-- Musical Plays in the Philippines -->
+        <div class="slide" id="slide6">
+            <div class="slide-content">
+                <h1>Musical Plays in the Philippines</h1>
+                <p>In the Philippines, the musical play is a more recent development than Broadway and West End, relying mostly on adaptations from novels, literary works, or biographical sketches of famous artists.</p>
+                <h3>Notable Philippine Musical Plays:</h3>
+                <ul class="musical-list">
+                    <li>Andres Bonifacio: Ang Dakilang Anak-Pawis</li>
+                    <li>Atang - Dulang May Musika</li>
+                    <li>Katy! The Musical</li>
+                    <li>Florante at Laura, The Musical</li>
+                    <li>Daragang Magayon</li>
+                    <li>Noli Me Tangere, The Musical</li>
+                    <li>El Filibusterismo, The Musical</li>
+                    <li>Magsimula Ka, The Musical</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- Andres Bonifacio Musical -->
+        <div class="slide" id="slide7">
+            <div class="slide-content">
+                <h1>Andres Bonifacio, Ang Dakilang Anak-Pawis</h1>
+                <p>The musical play Andres Bonifacio: Ang Dakilang Anak-Pawis is a five-act work commissioned by Alfonso Puyat in 1979, depicting the life of revolutionary hero Andres Bonifacio. It was co-produced by the Cultural Center of the Philippines and the Andres Bonifacio Music Foundation, Inc., and was staged again at the CCP Main Theater on August 20 and 21, 1994 with Jerry Dadap as composer-conductor and the late Elmo Makil as Bonifacio.</p>
+                <p>In 2014, the UP College of Music and Andres Bonifacio Concert Choir presented their own version of the musical play in celebration of the 150th birth anniversary of Bonifacio.</p>
+                <h3>The Hero Behind the Musical</h3>
+                <p>Andres Bonifacio was born on November 30, 1863 in Tondo, Manila to Santiago Bonifacio and Catalina de Castro. As the eldest of six children, Andres was forced to give up his plans for higher education to support his younger siblings due to the early demise of both parents.</p>
+            </div>
+        </div>
+        
+        <!-- Atang Musical -->
+        <div class="slide" id="slide8">
+            <div class="slide-content">
+                <h1>Atang - Dulang May Musika</h1>
+                <p>Atang - Dulang May Musika is a musical based on the life of the first superstar of the Philippines, Atang de la Rama. It starred Ayen Munji-Laurel, Shamaine Centenera Buencamino, Frances Makil-Ignacio, Kalila Aguilos, Teroy Guzman, Greg de Leon, Mitoy Sta. Ana, Ricky Ibe, Meynard Peñalosa, Bituin Escalante and the Dulaang UP Ensemble.</p>
+                <h3>Biography of Atang de la Rama</h3>
+                <p>Honorata dela Rama-Hernandez was more popularly known as Atang de la Rama. She was a singer, bodabil performer, and the first Filipina film actress. She was born in Tondo, Manila on January 11, 1902 and died on July 11, 1991. By the age of 7, she was already performing in a number of Spanish zarzuelas including Mascota, Sueño de un Vals, and Marina. Later, at the age of 15, she became popular with the song Nabasag ang Banga in the Filipino zarzuela Dalagang Bukid.</p>
+            </div>
+        </div>
+        
+        <!-- Katy Musical -->
+        <div class="slide" id="slide9">
+            <div class="slide-content">
+                <h1>Katy! The Musical</h1>
+                <p>The musical Katy! is about the life of bodabil (vaudeville) star Katy de la Cruz. It was initially presented by Actors Studio East Production in 1988. The play commissioned Ryan Cayabyab for the music and Jose Javier Reyes for the lyrics. It starred Mitch Valdes in the title role.</p>
+                <h3>Biography of Katy de la Cruz</h3>
+                <p>Catalina de la Cruz was born in Bustos, Bulacan on February 13, 1907 and died on November 10, 2004. Popularly known as Katy de la Cruz, she was hailed as the "Queen of Filipino Jazz" and "Queen of Bobadil."</p>
+                <p>Her career spanned eight decades, during which time she became the highest paid Filipino entertainer. She appeared in films, jazz venues, theaters, and bodabil, the Filipino counterpart of the American vaudeville. Bodabil contained songs and dances, slapstick comedy routines, and magic acts, with chorus girls providing musical and dance support. It became popular in the Philippines from 1910 to the mid 1960's, and was often used to fill in gaps between short Spanish zarzuelas or between acts of longer ones.</p>
+            </div>
+        </div>
+        
+        <!-- Florante at Laura Musical -->
+        <div class="slide" id="slide10">
+            <div class="slide-content">
+                <h1>Florante at Laura, The Musical</h1>
+                <p>The musical Florante at Laura was presented by Tanghalang Pilipino at the CCP Little Theater (Tanghalang Aurelio Tolentino) from July 7 to 24, 1988. This was in celebration of the 200th birth anniversary of the author Francisco Balagtas-Baltazar. The musical was selected as the official Philippine entry to the first ASEAN Theater Festival in August 1988.</p>
+                <p>The music and musical arrangements were done by Nonong Buencamino, based on the book and lyrics of Tony Perez. Directed by Nonon Padilla, the production team included National Artist Salvador Bernal for set and costume design, Bobby Roces for lighting design, and Christine Blando for choreography.</p>
+                <h3>The Tale Behind the Musical</h3>
+                <p>This tale by Francisco Balagtas-Baltazar takes place in a remote tropical jungle between the mythical kingdoms of Albania and Persia. Two desperate warriors are lamenting the fates that have befallen them. Florante, a Christian duke from Crotona formerly bethrothed to Princess Laura of Albania, has been banished to die because of a coup led by his scheming cousin Adolfo.</p>
+            </div>
+        </div>
+        
+        <!-- Daragang Magayon -->
+        <div class="slide" id="slide11">
+            <div class="slide-content">
+                <h1>Daragang Magayon</h1>
+                <p>The musical play Daragang Magayon is a production for poetry and mixed media for male and female narrators, female voice, two percussionists, two pianists, and two dancers. It was first presented at the Cultural Center of the Philippines Loading Dock in March 1991. It was produced by the CCP Women's Desk and the Coordinating Center for Dance to mark Women's Month based on a poem by Merlinda C. Bobis.</p>
+                <p>The music was composed by National Artist Ramon P. Santos, with choreography by Hazel Sabas, set and lighting design by Katsch SJ Catoy, and costume design by Julie Lluch Dalena.</p>
+                <h3>The Myth Behind the Musical</h3>
+                <p>This myth on the origin of Mount Mayon is centered on an immortal tale of love familiar to all people in the Bicol region. They would like to believe that the lovers Magayon, the beautiful maiden for whom the volcano is named, and her lover Ulap must be kissing.</p>
+            </div>
+        </div>
+        
+        <!-- Noli Me Tangere Musical -->
+        <div class="slide" id="slide12">
+            <div class="slide-content">
+                <h1>Noli Me Tangere, The Musical</h1>
+                <p>The musical play Noli Me Tangere was staged at the CCP Little Theater from February 1 to 4, 1996 as a production of Tanghalang Pilipino. The creative team included Ryan Cayabyab as composer and musical director, National Artist Bienvenido Lumbera as librettist, Edna Vida as choreographer, National Artist Salvador Bernal as set and costume designer, Masaaki Sano as lighting designer, Gerry Fernandez as associate lighting designer, and Nonon Padilla as stage director.</p>
+                <p>The role of Crisostomo Ibarra is alternately played by John Arcilla and Audie Gemora, Maria Clara by Gigi Posadas, Padre Damaso by Bodjie Pascua/Bernardo Bernardo, Padre Bernardo Salvi by Eugene Villaluz/Raul Roxas, Elias by Calvin Millado/Raul Roxas, Kapitan Santiago de los Santos by Lito Villareal, Doña Victorina de los Reyes by Sheila Francisco/Peaches Gallegos, Sisa by Irma Adlawan/Mia Ongsiako, Tia Isabel by Clottie Gealogo/Alma May Dalida, and Alfonso Linares by Roden Araneta.</p>
+                <p>Selected songs in the musical include Sa Muling Pagkikita, Dalawang Liham, Tatlong Sulok ng Pag-ibig, Ang Mga Sawimpalad, Ang Multo sa Lawa, Ang Totoo ay Totoo, and Sa Bagtasan ng Mga Landas.</p>
+            </div>
+        </div>
+        
+        <!-- El Filibusterismo Musical -->
+        <div class="slide" id="slide13">
+            <div class="slide-content">
+                <h1>El Filibusterismo, The Musical</h1>
+                <p>The musical play El Filibusterismo is a two-act play that was staged at the CCP Main Theater from August 8 to 10, 1997 as a production of Tanghalang Pilipino. The creative team was composed of Ryan Cayabyab for music, Jovy Miroy for the libretto, Edna Vida for the choreography, National Artist Salvador Bernal for the set and costume design, and Nonon Padilla for stage direction.</p>
+                <p>The role of Simoun/Crisostomo Ibarra was alternately played by John Arcilla and Bernardo Bernardo. Josephine Roces was Maria Clara, Emmy P. Cayabyab and Melani Mabilangan alternated as Paulita Gomez, Miguel Vera was Isagani, and Ariel Dayanghirang was Basilio. They were complemented by a large chorus.</p>
+                <p>The musical play closely follows the Rizal novel, whose major character Crisostomo Ibarra disguised as Simoun.</p>
+            </div>
+        </div>
+        
+        <!-- Magsimula Ka -->
+        <div class="slide" id="slide14">
+            <div class="slide-content">
+                <h1>Magsimula Ka, The Musical</h1>
+                <p>The musical play Magsimula Ka by Gines Tan was staged at the CCP Main Theater from April 7 to 24, 1988. As the winner of the CCP Playwriting Contest in 1983, it became one of the longest running musicals at the CCP. Later, it underwent a series of revivals in the ensuing years while some of its initial lead performers eventually became stars in their own right.</p>
+                <p>Magsimula Ka is the story of young dreamers whose ambitions begin to fade in life's realities. They are part of the graduating class filled with hope but end up compromising their idealism for their own survival.</p>
+                <p>The play responds to the young peoples' lingering question of whether there is hope for them in this cruel world. A major factor in realizing this hope is to start and uphold one's talent or ambition despite all odds.</p>
+                <p>Numerous songs in the play eventually became popular hits, including: Magandang Gabi, Buhay Ko't Pag-ibig, Kundi Ka Masilayan, Kahit Kailanman, Ialay Sa Akin, and many more.</p>
+            </div>
+        </div>
+        
+        <!-- End Slide -->
+        <div class="slide" id="slide15">
+            <div class="slide-content title-slide">
+                <div class="title-content">
+                    <h1>Thank You!</h1>
+                    <h2>Philippine Opera and Musical Plays</h2>
+                    <p>A rich cultural heritage of musical theater tradition</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <div class="navigation">
+            <button class="nav-button" id="prevBtn">Previous</button>
+            <button class="nav-button" id="nextBtn">Next</button>
+        </div>
+        
+        <!-- Slide Indicators -->
+        <div class="indicator" id="indicator">
+            <!-- Will be populated by JavaScript -->
+        </div>
+    </div>
+    
+    <script>
+        // Music notes decoration
+        const musicNotes = document.getElementById('musicNotes');
+        const notes = ['♩', '♪', '♫', '♬', '𝄞', '𝅘𝅥𝅮', '𝅘𝅥𝅯', '𝄢'];
+        
+        for (let i = 0; i < 30; i++) {
+            const note = document.createElement('div');
+            note.className = 'music-note';
+            note.textContent = notes[Math.floor(Math.random() * notes.length)];
+            note.style.left = `${Math.random() * 100}%`;
+            note.style.top = `${Math.random() * 100}%`;
+            note.style.animationDelay = `${Math.random() * 5}s`;
+            note.style.fontSize = `${Math.random() * 2 + 1}rem`;
+            note.style.color = `hsl(${Math.random() * 360}, 70%, 70%)`;
+            musicNotes.appendChild(note);
+        }
+        
+        // Slide navigation
+        let slideIndex = 1;
+        const slides = document.querySelectorAll('.slide');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+        const indicator = document.getElementById('indicator');
+        
+        // Create indicators
+        slides.forEach((_, index) => {
+            const dot = document.createElement('span');
+            dot.className = 'dot';
+            if (index === 0) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                showSlide(index + 1);
+            });
+            indicator.appendChild(dot);
+        });
+        
+        function showSlide(n) {
+            if (n > slides.length) slideIndex = 1;
+            if (n < 1) slideIndex = slides.length;
+            
+            slides.forEach(slide => {
+                slide.classList.remove('active');
+            });
+            
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => {
+                dot.classList.remove('active');
+            });
+            
+            slides[slideIndex - 1].classList.add('active');
+            dots[slideIndex - 1].classList.add('active');
+        }
+        
+        prevBtn.addEventListener('click', () => {
+            showSlide(slideIndex -= 1);
+        });
+        
+        nextBtn.addEventListener('click', () => {
+            showSlide(slideIndex += 1);
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                showSlide(slideIndex -= 1);
+            } else if (e.key === 'ArrowRight') {
+                showSlide(slideIndex += 1);
+            }
+        });
+        
+        // Initialize first slide
+        showSlide(slideIndex);
+    </script>
+</body>
+</html>
